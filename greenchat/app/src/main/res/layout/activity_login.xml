@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/holo_green_light"
-    tools:context=".ui.activity.LoginActivity">
+    tools:context=".ui.activity.login.LoginActivity">
 
     <EditText
         android:id="@+id/edEmail"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:hint="@string/username"
+        android:hint="@string/email"
         android:background="@drawable/rounded_edittext"
         android:inputType="textEmailAddress"
         android:padding="8dp"

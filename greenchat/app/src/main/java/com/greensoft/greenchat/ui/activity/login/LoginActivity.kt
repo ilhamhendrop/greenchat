@@ -1,11 +1,14 @@
-package com.greensoft.greenchat.ui.activity
+package com.greensoft.greenchat.ui.activity.login
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.greensoft.greenchat.R
+import com.greensoft.greenchat.ui.activity.message.MessagesActivity
+import com.greensoft.greenchat.ui.activity.register.RegisterActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_login.edPassword
 
@@ -33,6 +36,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                     .signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener {
                         if (it.isSuccessful) {
+                            val intent = Intent(applicationContext, MessagesActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
                             Toast.makeText(applicationContext, "Succes Login ${it.result?.user?.email} ", Toast.LENGTH_SHORT).show()
                             return@addOnCompleteListener
                         }

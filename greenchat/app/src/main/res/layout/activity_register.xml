@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="8dp"
     android:background="@android:color/holo_green_light"
-    tools:context=".ui.activity.RegisterActivity">
+    tools:context=".ui.activity.register.RegisterActivity">
 
     <ScrollView
         android:layout_width="match_parent"

@@ -1,8 +1,7 @@
-package com.greensoft.greenchat.ui.activity
+package com.greensoft.greenchat.ui.activity.register
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,7 +13,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.greensoft.greenchat.R
-import com.greensoft.greenchat.adapter.User
+import com.greensoft.greenchat.adapter.model.User
+import com.greensoft.greenchat.ui.activity.message.MessagesActivity
+import com.greensoft.greenchat.ui.activity.login.LoginActivity
 import kotlinx.android.synthetic.main.activity_register.*
 import java.util.*
 
@@ -48,8 +49,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                         .createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener {
                             if (it.isSuccessful) {
-                                edEmail.text.clear()
-                                edPassword.text.clear()
+
 
                                 uploadImagePhoto()
 
@@ -95,17 +95,22 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun saveUserDatabase(photoUrl: String) {
         val uid = FirebaseAuth.getInstance().uid ?: ""
-
         val firbase = FirebaseDatabase.getInstance().getReference("/users/$uid")
 
         val username = edUsername.text.toString()
-
         val user = User(uid, username, photoUrl)
 
         firbase.setValue(user)
             .addOnSuccessListener {
                 edUsername.text.clear()
                 edEmail.text.clear()
+                edEmail.text.clear()
+                edPassword.text.clear()
+
+                val intent = Intent(applicationContext, MessagesActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+
                 Toast.makeText(applicationContext, "Succes ", Toast.LENGTH_SHORT).show()
             }
 
