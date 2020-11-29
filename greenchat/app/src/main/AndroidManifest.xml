@@ -9,10 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GreenChat">
-
+        <activity android:name=".ui.activity.message.ChatLogActivity"
+            android:theme="@style/Theme.GreenChat.NoActionBar"></activity>
         <activity
             android:name=".ui.activity.message.MessagesActivity"
-            android:theme="@style/Theme.GreenChat.NoActionBar"/>
+            android:theme="@style/Theme.GreenChat.NoActionBar" />
         <activity
             android:name=".ui.activity.register.RegisterActivity"
             android:theme="@style/Theme.GreenChat.NoActionBar">
@@ -25,8 +26,9 @@
         <activity
             android:name=".ui.activity.login.LoginActivity"
             android:theme="@style/Theme.GreenChat.NoActionBar" />
-        <activity android:name=".ui.activity.message.NewMessageActivity"
-            android:theme="@style/Theme.GreenChat.NoActionBar"/>
+        <activity
+            android:name=".ui.activity.message.NewMessageActivity"
+            android:theme="@style/Theme.GreenChat.NoActionBar" />
     </application>
 
 </manifest>

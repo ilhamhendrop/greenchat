@@ -9,4 +9,6 @@
     <string name="select_photo">Select Photo</string>
     <string name="signout">Signout</string>
     <string name="message">Message</string>
+    <string name="masukan_chat">Masukan Chat</string>
+    <string name="kirim">Kirim</string>
 </resources>

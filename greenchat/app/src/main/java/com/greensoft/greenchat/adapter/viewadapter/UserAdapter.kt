@@ -9,7 +9,7 @@ import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.item_user.view.*
 
-class UserAdapter(private val user: User, private val context: Context) : Item<GroupieViewHolder>(){
+class UserAdapter(val user: User, private val context: Context) : Item<GroupieViewHolder>(){
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.txtUser.text = user.username
         Glide.with(context)
@@ -17,11 +17,6 @@ class UserAdapter(private val user: User, private val context: Context) : Item<G
             .apply(RequestOptions.placeholderOf(R.drawable.ic_broken_image))
             .error(R.drawable.ic_broken_image)
             .into(viewHolder.itemView.imgPhoto)
-
-        viewHolder.itemView.txtUser.setOnClickListener {
-
-        }
-
     }
 
     override fun getLayout(): Int {

@@ -1,7 +1,9 @@
 package com.greensoft.greenchat.ui.activity.message
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -16,6 +18,10 @@ import kotlinx.android.synthetic.main.activity_new_message.*
 import java.lang.StringBuilder
 
 class NewMessageActivity : AppCompatActivity() {
+    companion object {
+        val USER_KEY = "user_key"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_message)
@@ -40,7 +46,17 @@ class NewMessageActivity : AppCompatActivity() {
                         listUser.add(UserAdapter(user, applicationContext))
                     }
                 }
+                
+                listUser.setOnItemClickListener { item, view ->
+                    val userItem = item as UserAdapter
+                    val intent = Intent(applicationContext, ChatLogActivity::class.java).apply {
+                        putExtra(USER_KEY,item.user)
+                    }
+                    startActivity(intent)
 
+                    finish()
+                }
+                
                 with(rvUser){
                     adapter = listUser
                     layoutManager = LinearLayoutManager(applicationContext)
@@ -49,12 +65,10 @@ class NewMessageActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                Toast.makeText(applicationContext, error.message, Toast.LENGTH_SHORT).show()
             }
 
         })
-
-
 
     }
 
