@@ -6,12 +6,22 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.greensoft.greenchat.R
+import com.greensoft.greenchat.adapter.model.User
 import com.greensoft.greenchat.ui.activity.register.RegisterActivity
 import kotlinx.android.synthetic.main.activity_messages.*
 import java.lang.StringBuilder
 
 class MessagesActivity : AppCompatActivity() {
+
+    companion object {
+        var currentUser: User? = null
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_messages)
@@ -20,6 +30,23 @@ class MessagesActivity : AppCompatActivity() {
         supportActionBar?.title = StringBuilder("Message")
 
         verifyUserIsLoggedIn()
+        fetchCurrentUser()
+    }
+
+    private fun fetchCurrentUser() {
+        val uid = FirebaseAuth.getInstance().uid
+        val firebase = FirebaseDatabase.getInstance().getReference("/users/$uid")
+
+        firebase.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                currentUser = snapshot.getValue(User::class.java)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     private fun verifyUserIsLoggedIn() {
