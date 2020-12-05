@@ -124,5 +124,11 @@ class ChatLogActivity : AppCompatActivity(), View.OnClickListener {
                     Toast.makeText(applicationContext, "${it.message}", Toast.LENGTH_SHORT).show()
                 }
         tofirebase.setValue(chatMessage)
+
+        val latestMessage = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId/$toId")
+        latestMessage.setValue(chatMessage)
+
+        val latestToMessage = FirebaseDatabase.getInstance().getReference("/latest-messages/$toId/$fromId")
+        latestToMessage.setValue(chatMessage)
     }
 }

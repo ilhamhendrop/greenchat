@@ -5,14 +5,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.greensoft.greenchat.R
+import com.greensoft.greenchat.adapter.model.ChatMessage
 import com.greensoft.greenchat.adapter.model.User
+import com.greensoft.greenchat.adapter.viewadapter.MessagesAdapter
 import com.greensoft.greenchat.ui.activity.register.RegisterActivity
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_messages.*
 import java.lang.StringBuilder
 
@@ -21,6 +23,9 @@ class MessagesActivity : AppCompatActivity() {
     companion object {
         var currentUser: User? = null
     }
+
+    private val listMessage = GroupAdapter<GroupieViewHolder>()
+    private val latestMessage = HashMap<String, ChatMessage>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +36,56 @@ class MessagesActivity : AppCompatActivity() {
 
         verifyUserIsLoggedIn()
         fetchCurrentUser()
+        loadMessage()
+    }
+
+    private fun loadMessage() {
+        val fromId = FirebaseAuth.getInstance().uid
+        val firebase = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId")
+
+        firebase.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val chatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
+
+                latestMessage[snapshot.key!!] = chatMessage
+                refreshMessage()
+
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                val chatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
+
+                latestMessage[snapshot.key!!] = chatMessage
+                refreshMessage()
+
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+        with(rvMessage){
+            layoutManager = LinearLayoutManager(applicationContext)
+            setHasFixedSize(true)
+            adapter = listMessage
+        }
+    }
+
+    private fun refreshMessage() {
+        listMessage.clear()
+        latestMessage.values.forEach {
+            listMessage.add(MessagesAdapter(it, applicationContext))
+        }
     }
 
     private fun fetchCurrentUser() {

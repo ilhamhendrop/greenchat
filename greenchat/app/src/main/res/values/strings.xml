@@ -11,4 +11,5 @@
     <string name="message">Message</string>
     <string name="masukan_chat">Masukan Chat</string>
     <string name="kirim">Kirim</string>
+    <string name="chat">Chat</string>
 </resources>
