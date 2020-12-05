@@ -45,14 +45,16 @@ class ChatLogActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun loadChat() {
-        val firebase = FirebaseDatabase.getInstance().getReference("/messages")
+        val fromId = FirebaseAuth.getInstance().uid
+        val toId = toUser?.uid
+        val firebase = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId")
 
         firebase.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
 
                 if (chatMessage != null) {
-                    Log.d(TAG, chatMessage.chat)
+                    Log.d(TAG, "$chatMessage.chat")
 
                     if (chatMessage.fromId == FirebaseAuth.getInstance().uid){
                         val fromUser = MessagesActivity.currentUser ?: return
@@ -101,21 +103,26 @@ class ChatLogActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun sendMessage() {
         val chat = edChat.text.toString()
-
         val fromId = FirebaseAuth.getInstance().uid
         val toId = toUser?.uid
 
         if (fromId == null) return
 
-        val firebase = FirebaseDatabase.getInstance().getReference("/messages").push()
+        //val firebase = FirebaseDatabase.getInstance().getReference("/messages").push()
+        val firebase = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push()
+        val tofirebase = FirebaseDatabase.getInstance().getReference("/user-messages/$toId/$fromId").push()
+
         val chatMessage = ChatMessage(firebase.key, chat, fromId, toId, System.currentTimeMillis() / 1000)
+
         firebase.setValue(chatMessage)
                 .addOnSuccessListener {
                     Log.d(TAG, "Succes our chat messages: ${firebase.key}")
                     edChat.text.clear()
+                    rvChat.scrollToPosition(listChat.itemCount -1)
                 }
                 .addOnFailureListener {
                     Toast.makeText(applicationContext, "${it.message}", Toast.LENGTH_SHORT).show()
                 }
+        tofirebase.setValue(chatMessage)
     }
 }

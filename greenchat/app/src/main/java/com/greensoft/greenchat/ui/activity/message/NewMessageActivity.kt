@@ -53,8 +53,6 @@ class NewMessageActivity : AppCompatActivity() {
                         putExtra(USER_KEY,item.user)
                     }
                     startActivity(intent)
-
-                    finish()
                 }
                 
                 with(rvUser){
