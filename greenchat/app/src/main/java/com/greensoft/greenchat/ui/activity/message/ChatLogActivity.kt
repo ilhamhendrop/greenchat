@@ -87,6 +87,7 @@ class ChatLogActivity : AppCompatActivity(), View.OnClickListener {
             layoutManager = LinearLayoutManager(applicationContext)
             setHasFixedSize(true)
             adapter = listChat
+            scrollToPosition(listChat.itemCount -1)
         }
     }
 
@@ -118,7 +119,6 @@ class ChatLogActivity : AppCompatActivity(), View.OnClickListener {
                 .addOnSuccessListener {
                     Log.d(TAG, "Succes our chat messages: ${firebase.key}")
                     edChat.text.clear()
-                    rvChat.scrollToPosition(listChat.itemCount -1)
                 }
                 .addOnFailureListener {
                     Toast.makeText(applicationContext, "${it.message}", Toast.LENGTH_SHORT).show()

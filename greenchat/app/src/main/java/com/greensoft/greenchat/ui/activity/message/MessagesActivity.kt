@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -78,6 +79,16 @@ class MessagesActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(applicationContext)
             setHasFixedSize(true)
             adapter = listMessage
+            addItemDecoration(DividerItemDecoration(applicationContext, DividerItemDecoration.VERTICAL))
+        }
+
+        listMessage.setOnItemClickListener { item, view ->
+            val message = item as MessagesAdapter
+
+            val intent = Intent(applicationContext, ChatLogActivity::class.java).apply {
+                putExtra(NewMessageActivity.USER_KEY, message.chatUser)
+            }
+            startActivity(intent)
         }
     }
 
